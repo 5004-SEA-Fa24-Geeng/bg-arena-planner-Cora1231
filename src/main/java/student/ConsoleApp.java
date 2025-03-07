@@ -28,7 +28,7 @@ public class ConsoleApp {
     /** The game list to manage. */
     private final IGameList gameList;
     /** The planner to help filter games. */
-    private final IPlanner planner;
+    private final Planner planner;
 
     /**
      * Constructor for the console app.
@@ -36,7 +36,7 @@ public class ConsoleApp {
      * @param gameList the game list to manage.
      * @param planner  the planner to help filter games.
      */
-    public ConsoleApp(IGameList gameList, IPlanner planner) {
+    public ConsoleApp(IGameList gameList, Planner planner) {
         this.gameList = gameList;
         this.planner = planner;
     }    

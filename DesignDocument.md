@@ -18,9 +18,211 @@ Provide a class diagram for the provided code as you read through it.  For the c
 
 Create a class diagram for the classes you plan to create. This is your initial design, and it is okay if it changes. Your starting points are the interfaces. 
 
+```mermaid
+classDiagram
+%% Package student
 
+%% BGArenaPlanner
+    class BGArenaPlanner {
+        - DEFAULT_COLLECTION: String = "/collection.csv"
+        + main(args: String[]) <<static>> : void
+    }
 
+%% BoardGame
+    class BoardGame {
+        - name: String
+        - id: int
+        - minPlayers: int
+        - maxPlayers: int
+        - maxPlayTime: int
+        - minPlayTime: int
+        - difficulty: double
+        - rank: int
+        - averageRating: double
+        - yearPublished: int
+        + BoardGame(name: String, id: int, minPlayers: int, maxPlayers: int, minPlayTime: int, maxPlayTime: int, difficulty: double, rank: int, averageRating: double, yearPublished: int)
+        + getName(): String
+        + getId(): int
+        + getMinPlayers(): int
+        + getMaxPlayers(): int
+        + getMaxPlayTime(): int
+        + getMinPlayTime(): int
+        + getDifficulty(): double
+        + getRank(): int
+        + getRating(): double
+        + getYearPublished(): int
+        + toStringWithInfo(col: GameData): String
+        + toString(): String
+        + equals(obj: Object): boolean
+        + hashCode(): int
+        + main(args: String[]) <<static>> : void
+    }
 
+%% ConsoleApp
+    class ConsoleApp {
+        - IN: Scanner <<static>>
+        - DEFAULT_FILENAME: String = "games_list.txt" <<static>>
+        - RND: Random <<static>>
+        - current: Scanner
+        - gameList: IGameList
+        - planner: IPlanner
+        + ConsoleApp(gameList: IGameList, planner: IPlanner)
+        + start(): void
+        - randomNumber(): void
+        - processHelp(): void
+        - processFilter(): void
+        - processListCommands(): void
+        - printCurrentList(): void
+        - nextCommand(): ConsoleText
+        - remainder(): String
+        - getInput(format: String, args: Object[]) <<static>> : String
+        - printOutput(format: String, output: Object[]) <<static>> : void
+    }
+
+%% Nested enum ConsoleText in ConsoleApp (represented separately)
+    class ConsoleText {
+        <<enumeration>>
+        WELCOME
+        HELP
+        INVALID
+        GOODBYE
+        PROMPT
+        NO_FILTER
+        NO_GAMES_LIST
+        FILTERED_CLEAR
+        LIST_HELP
+        FILTER_HELP
+        INVALID_LIST
+        EASTER_EGG
+        CMD_EASTER_EGG
+        CMD_EXIT
+        CMD_HELP
+        CMD_QUESTION
+        CMD_FILTER
+        CMD_LIST
+        CMD_SHOW
+        CMD_ADD
+        CMD_REMOVE
+        CMD_CLEAR
+        CMD_SAVE
+        CMD_OPTION_ALL
+        CMD_SORT_OPTION
+        CMD_SORT_OPTION_DIRECTION_ASC
+        CMD_SORT_OPTION_DIRECTION_DESC
+        + toString(): String
+        + fromString(str: String): ConsoleText
+    }
+
+%% GamesLoader
+    class GamesLoader {
+        - DELIMITER: String = ","
+        + loadGamesFile(filename: String) <<static>> : Set<BoardGame>
+        - toBoardGame(line: String, columnMap: Map<GameData, Integer>) <<static>> : BoardGame
+        - processHeader(header: String) <<static>> : Map<GameData, Integer>
+    }
+
+%% IGameList interface
+    class IGameList {
+        <<interface>>
+        + getGameNames(): List<String>
+        + clear(): void
+        + count(): int
+        + saveGame(filename: String): void
+        + addToList(str: String, filtered: Stream<BoardGame>): void
+        + removeFromList(str: String): void
+    }
+    note for IGameList "ADD_ALL is a static String constant."
+
+%% GameList implements IGameList
+    class GameList {
+        + GameList()
+        + getGameNames(): List<String>
+        + clear(): void
+        + count(): int
+        + saveGame(filename: String): void
+        + addToList(str: String, filtered: Stream<BoardGame>): void
+        + removeFromList(str: String): void
+    }
+    IGameList <|.. GameList
+
+%% GameData (enum)
+    class GameData {
+        <<enumeration>>
+        NAME
+        ID
+        RATING
+        DIFFICULTY
+        RANK
+        MIN_PLAYERS
+        MAX_PLAYERS
+        MIN_TIME
+        MAX_TIME
+        YEAR
+        - columnName: String
+        + getColumnName(): String
+        + fromColumnName(columnName: String): GameData
+        + fromString(name: String): GameData
+    }
+
+%% IPlanner interface
+    class IPlanner {
+        <<interface>>
+        + filter(filter: String): Stream<BoardGame>
+        + filter(filter: String, sortOn: GameData): Stream<BoardGame>
+        + filter(filter: String, sortOn: GameData, ascending: boolean): Stream<BoardGame>
+        + reset(): void
+    }
+
+%% Planner implements IPlanner
+    class Planner {
+        + Planner(games: Set<BoardGame>)
+        + filter(filter: String): Stream<BoardGame>
+        + filter(filter: String, sortOn: GameData): Stream<BoardGame>
+        + filter(filter: String, sortOn: GameData, ascending: boolean): Stream<BoardGame>
+        + reset(): void
+    }
+    IPlanner <|.. Planner
+
+%% Operations (enum)
+    class Operations {
+        <<enumeration>>
+        EQUALS("==")
+        NOT_EQUALS("!=")
+        GREATER_THAN(">")
+        LESS_THAN("<")
+        GREATER_THAN_EQUALS(">=")
+        LESS_THAN_EQUALS("<=")
+        CONTAINS("~=")
+        - operator: String
+        + getOperator(): String
+        + fromOperator(operator: String): Operations
+        + getOperatorFromStr(str: String): Operations
+    }
+
+%% Associations
+    BGArenaPlanner --> IPlanner : creates
+    BGArenaPlanner --> IGameList : creates
+    BGArenaPlanner --> GamesLoader : uses
+    ConsoleApp --> IGameList : uses
+    ConsoleApp --> IPlanner : uses
+    GamesLoader --> BoardGame : creates
+    Planner --> BoardGame : filters
+```
+
+```mermaid
+classDiagram
+    class Player {
+      - id: int
+      - name: String
+      - email: String
+      + Player(id: int, name: String, email: String)
+      + getId(): int
+      + getName(): String
+      + getEmail(): String
+      + setEmail(email: String): void
+      + toString(): String
+    }
+```
 
 ## (INITIAL DESIGN): Tests to Write - Brainstorm
 
@@ -36,8 +238,8 @@ Write a test (in english) that you can picture for the class diagram you have cr
 
 You should feel free to number your brainstorm. 
 
-1. Test 1..
-2. Test 2..
+1. Test getName
+2. Test Clear
 
 
 

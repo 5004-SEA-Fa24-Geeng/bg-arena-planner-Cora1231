@@ -19,7 +19,7 @@ public final class BGArenaPlanner {
      * @param args command line arguments - not used at this time.
      */
     public static void main(String[] args) {
-        IPlanner planner = new Planner(GamesLoader.loadGamesFile(DEFAULT_COLLECTION));
+        Planner planner = new Planner(GamesLoader.loadGamesFile(DEFAULT_COLLECTION));
         IGameList list = new GameList();
         ConsoleApp app = new ConsoleApp(list, planner);
         app.start();
