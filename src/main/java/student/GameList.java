@@ -1,26 +1,22 @@
 package student;
 
-import com.sun.source.tree.UsesTree;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GameList implements IGameList {
     private static final String DEFAULT_FILENAME = "games_list.txt";
 
+    private Set<BoardGame> games;
+
     /**
      * Constructor for the GameList.
      */
-    List<BoardGame> games;
     public GameList() {
-
-        games = new ArrayList<>();
+        games = new HashSet<>();
     }
 
     @Override
@@ -30,19 +26,16 @@ public class GameList implements IGameList {
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
         games.clear();
     }
 
     @Override
     public int count() {
-        // TODO Auto-generated method stub
-       return games.size();
+        return games.size();
     }
 
     @Override
     public void saveGame(String filename) {
-        // TODO Auto-generated method stub
         if (filename == null || filename.trim().isEmpty()) {
             filename = DEFAULT_FILENAME;
         }
@@ -60,75 +53,89 @@ public class GameList implements IGameList {
 
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
-        //list OfGames HashSet, str operation, Stram<BoardGame> filtered
-        if (str == null || str.isEmpty()) {
+        if (str == null || str.isEmpty() || filtered == null) {
             return;
         }
-        List<BoardGame> filteredList = filtered.toList();
 
-        if(str.contains("-")){
+        List<BoardGame> filteredList = filtered.toList();
+        if (filteredList.isEmpty()) {
+            return; // No games to add
+        }
+
+        // Handle range format (e.g., "1-3")
+        if (str.contains("-")) {
             String[] arr = str.split("-");
-            if(arr.length == 2){
-                try{
+            if (arr.length == 2) {
+                try {
                     int start = Integer.parseInt(arr[0]);
                     int end = Integer.parseInt(arr[1]);
-                    for(int i = Math.max(0,start-1); i < Math.min(end,filteredList.size()); i++){
+                    for (int i = Math.max(0, start - 1); i < Math.min(end, filteredList.size()); i++) {
                         games.add(filteredList.get(i));
                     }
                     return;
-                }catch (NumberFormatException e){
-                    throw new IllegalArgumentException("invalid format");
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid format for range input: " + str);
                 }
             }
         }
+
+        // Handle single index input
         try {
             int idx = Integer.parseInt(str);
-            if(idx >= 1 && idx <= filteredList.size()){
-                games.add(filteredList.get(idx-1));
+            if (idx >= 1 && idx <= filteredList.size()) {
+                games.add(filteredList.get(idx - 1));
             }
         } catch (NumberFormatException e) {
-            for(BoardGame game : filteredList){
-                if(game.getName().equals(str)){
+            // Handle direct name matching
+            for (BoardGame game : filteredList) {
+                if (game.getName().equalsIgnoreCase(str)) {
                     games.add(game);
+                    return;
                 }
             }
-
         }
-
-
     }
 
     @Override
     public void removeFromList(String str) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
         if (str == null || str.isEmpty()) {
             return;
         }
 
-        if(str.contains("-")){
+        List<BoardGame> list = new ArrayList<>(games);
+
+        // Handle range format (e.g., "1-3")
+        if (str.contains("-")) {
             String[] arr = str.split("-");
-            if(arr.length == 2){
-                try{
+            if (arr.length == 2) {
+                try {
                     int start = Integer.parseInt(arr[0]);
                     int end = Integer.parseInt(arr[1]);
-                    for(int i = Math.max(0,start-1); i < Math.min(end,games.size()); i++){
-                       games.remove(i);
+
+                    // Iterate in reverse order to prevent index shifting issues
+                    for (int i = Math.min(end, list.size()) - 1; i >= Math.max(0, start - 1); i--) {
+                        list.remove(i);
                     }
+
+                    games = new HashSet<>(list);
                     return;
-                }catch (NumberFormatException e){
-                    throw new IllegalArgumentException("invalid format");
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid format for range input: " + str);
                 }
             }
         }
+
+        // Handle single index removal
         try {
             int idx = Integer.parseInt(str);
-            if(idx >= 0 && idx < games.size()){
-                games.remove(idx);
+            if (idx >= 1 && idx <= list.size()) {
+                list.remove(idx - 1); // Convert 1-based to 0-based index
+                games = new HashSet<>(list);
+                return;
             }
         } catch (NumberFormatException e) {
-            games.remove(str);
+            // Handle name-based removal
+            games.removeIf(game -> game.getName().equalsIgnoreCase(str));
         }
     }
-
-
 }
