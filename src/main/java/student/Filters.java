@@ -1,6 +1,8 @@
 package student;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +26,6 @@ public class Filters {
      */
     public List<BoardGame> controller(String commands, List<BoardGame> gameList) {
         String[] cmds = commands.split(",");
-
         for (String cmd : cmds) {
             if (cmd.contains("name")) {
                 gameList = filterByName(cmd, gameList);
@@ -52,6 +53,7 @@ public class Filters {
                 }
             }
         }
+        gameList = new ArrayList<>(new LinkedHashSet<>(gameList));
         return gameList;
     }
 
