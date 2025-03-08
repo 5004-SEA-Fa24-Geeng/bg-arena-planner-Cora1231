@@ -63,7 +63,7 @@ public class Filters {
      * @return A list of board games matching the name filter.
      */
     public List<BoardGame> filterByName(String name, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("name(~=|==)(\\S+)");
+        Pattern pattern = Pattern.compile("name(~=|==|!=)(\\S+)");
         Matcher matcher = pattern.matcher(name);
         List<BoardGame> res = new ArrayList<>();
         if (matcher.find()) {
@@ -75,7 +75,14 @@ public class Filters {
                         res.add(s);
                     }
                 }
-            }else{
+            }else if(operator.equals("!=")){
+                for (BoardGame s : list) {
+                    if (!s.getName().equals(value)) {
+                        res.add(s);
+                    }
+                }
+            }
+            else{
                 for (BoardGame s : list) {
                     if (s.getName().contains(name)) {
                         res.add(s);
@@ -87,7 +94,7 @@ public class Filters {
     }
 
     public List<BoardGame> filterByMaxPlayer(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("maxplayers(<=|<|>=|>|==)(\\S+)");
+        Pattern pattern = Pattern.compile("maxplayers(<=|<|>=|>|==|!=)(\\S+)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
         if (matcher.find()) {
@@ -105,7 +112,13 @@ public class Filters {
                         res.add(s);
                     }
                 }
-            } else if(operator.equals("<")){
+            } else if(operator.equals("!=")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals("<")){
                 for (BoardGame s : list) {
                     if (s.getMaxPlayers() < Integer.parseInt(value)) {
                         res.add(s);
@@ -160,6 +173,12 @@ public class Filters {
                         res.add(s);
                     }
                 }
+            }else if(operator.equals("!=")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
             }else if(operator.equals("<=")){
                 for (BoardGame s : list) {
                     if (s.getMinPlayers() <= Integer.parseInt(value)) {
@@ -194,6 +213,12 @@ public class Filters {
             } else if(operator.equals("<")){
                 for (BoardGame s : list) {
                     if (s.getMinPlayTime() < Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals("!=")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
                         res.add(s);
                     }
                 }
