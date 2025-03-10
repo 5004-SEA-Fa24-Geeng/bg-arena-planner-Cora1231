@@ -61,6 +61,9 @@ public class GameList implements IGameList {
         if (filteredList.isEmpty()) {
             return; // No games to add
         }
+        if (str.equals("all")) {
+            games.addAll(filteredList);
+        }
 
         // Handle range format (e.g., "1-3")
         if (str.contains("-")) {
