@@ -89,7 +89,7 @@ public class Filters {
                 }
             }
         }
-        res.sort(((o1, o2) -> o1.getName().compareTo(o2.getName())));
+        res.sort(((o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase())));
         return res;
     }
 
