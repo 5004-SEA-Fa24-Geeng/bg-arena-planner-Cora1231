@@ -1,9 +1,6 @@
 package student;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,6 +89,7 @@ public class Filters {
                 }
             }
         }
+        res.sort(((o1, o2) -> o1.getName().compareTo(o2.getName())));
         return res;
     }
 
