@@ -35,7 +35,7 @@ public class Filters {
                 gameList = filterByMinPlayer(cmd, gameList);
 
             } else if (cmd.contains("minplaytime")) {
-                gameList = filterByMinPlayer(cmd, gameList);
+                gameList = filterByMinTime(cmd, gameList);
             }
         }
 
@@ -86,7 +86,7 @@ public class Filters {
             }
             else{
                 for (BoardGame s : list) {
-                    if (s.getName().contains(name)) {
+                    if (s.getName().contains(value)) {
                         res.add(s);
                     }
                 }
