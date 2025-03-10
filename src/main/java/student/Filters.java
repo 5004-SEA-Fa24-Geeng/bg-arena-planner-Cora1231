@@ -86,7 +86,7 @@ public class Filters {
             }
             else{
                 for (BoardGame s : list) {
-                    if (s.getName().contains(value)) {
+                    if (s.getName().toLowerCase().contains(value)) {
                         res.add(s);
                     }
                 }
