@@ -106,7 +106,10 @@ public class GameList implements IGameList {
         }
 
         List<BoardGame> list = new ArrayList<>(games);
-
+        if (str.contains("all")) {
+            games = new HashSet<>();;
+            return;
+        }
         // Handle range format (e.g., "1-3")
         if (str.contains("-")) {
             String[] arr = str.split("-");
