@@ -26,11 +26,12 @@ public class Filters {
         if(gameList.isEmpty())
             return gameList;
         for (String cmd : cmds) {
+            cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
             if (cmd.contains("name")) {
                 gameList = filterByName(cmd, gameList);
-            } else if (cmd.contains("maxplayers")) {
+            } else if (cmd.toLowerCase().contains("maxplayers")) {
                 gameList = filterByMaxPlayer(cmd, gameList);
-            } else if (cmd.contains("minplayers")) {
+            } else if (cmd.toLowerCase().contains("minplayers")) {
                 gameList = filterByMinPlayer(cmd, gameList);
 
             } else if (cmd.contains("minplaytime")) {
