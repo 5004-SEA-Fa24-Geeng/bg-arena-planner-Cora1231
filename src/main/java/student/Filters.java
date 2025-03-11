@@ -29,12 +29,12 @@ public class Filters {
             cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
             if (cmd.contains("name")) {
                 gameList = filterByName(cmd, gameList);
-            } else if (cmd.toLowerCase().contains("maxplayers")) {
+            } else if (cmd.contains("maxplayers")||cmd.contains("max_players")) {
                 gameList = filterByMaxPlayer(cmd, gameList);
-            } else if (cmd.toLowerCase().contains("minplayers")) {
+            } else if (cmd.contains("minplayers") ||cmd.contains("min_players")) {
                 gameList = filterByMinPlayer(cmd, gameList);
 
-            } else if (cmd.contains("minplaytime")) {
+            } else if (cmd.contains("minplaytime")||cmd.contains("min_time")) {
                 gameList = filterByMinTime(cmd, gameList);
             }
         }
