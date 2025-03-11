@@ -23,18 +23,26 @@ public class Filters {
      */
     public List<BoardGame> controller(String commands, List<BoardGame> gameList) {
         String[] cmds = commands.split(",");
+
         if(gameList.isEmpty())
             return gameList;
+        GameData minplayers = GameData.fromString("minplayers");
+        GameData maxplayers = GameData.fromString("maxplayers");
+        GameData mintime = GameData.fromString("minplaytime");
+
         for (String cmd : cmds) {
             cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
             if (cmd.contains("name")) {
                 gameList = filterByName(cmd, gameList);
-            } else if (cmd.contains("maxplayers")||cmd.contains("max_players")) {
+            } else if (cmd.contains("maxplayers")||cmd.contains(maxplayers.name().toLowerCase())) {
+                cmd =cmd.replace(maxplayers.name().toLowerCase(),"maxplayers");
                 gameList = filterByMaxPlayer(cmd, gameList);
-            } else if (cmd.contains("minplayers") ||cmd.contains("min_players")) {
+            } else if (cmd.contains("minplayers") ||cmd.contains(minplayers.name().toLowerCase())) {
+                cmd =cmd.replace(minplayers.name().toLowerCase(),"minplayers");
                 gameList = filterByMinPlayer(cmd, gameList);
 
-            } else if (cmd.contains("minplaytime")||cmd.contains("min_time")) {
+            } else if (cmd.contains("minplaytime")||cmd.contains(mintime.name().toLowerCase())) {
+                cmd = cmd.replace(mintime.name().toLowerCase(),"minplaytime");
                 gameList = filterByMinTime(cmd, gameList);
             }
         }
