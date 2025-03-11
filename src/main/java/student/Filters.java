@@ -70,48 +70,56 @@ public class Filters {
         if (matcher.find()) {
             String operator = matcher.group(1);  // Either ~= or ==
             String value = matcher.group(2);     // Extracted value
-            if (operator.equals("==")) {
-                for (BoardGame s : list) {
+            String anotherString = value.toLowerCase().trim().replaceAll("\\s+", "");
+            switch (operator) {
+                case "==" -> {
+                    for (BoardGame s : list) {
 
-                    if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(value.toLowerCase().trim().replaceAll("\\s+", ""))) {
-                        res.add(s);
+                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(anotherString)) {
+                            res.add(s);
+                        }
                     }
                 }
-            }else if(operator.equals("!=")){
-                for (BoardGame s : list) {
-                    if (!s.getName().equals(value)) {
-                        res.add(s);
+                case "!=" -> {
+                    for (BoardGame s : list) {
+                        if (! s.getName().equals(value)) {
+                            res.add(s);
+                        }
                     }
                 }
-            }else if(operator.equals("<")){
-                for (BoardGame s : list) {
-                    if (s.getName().compareTo(value)<0) {
-                        res.add(s);
+                case "<" -> {
+                    for (BoardGame s : list) {
+                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) < 0) {
+                            res.add(s);
+                        }
                     }
                 }
-            }else if(operator.equals(">=")){
-                for (BoardGame s : list) {
-                    if (s.getName().compareTo(value)>=0) {
-                        res.add(s);
+                case ">=" -> {
+                    for (BoardGame s : list) {
+                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) >= 0) {
+                            res.add(s);
+                        }
                     }
                 }
-            }else if(operator.equals("<=")){
-                for (BoardGame s : list) {
-                    if (s.getName().compareTo(value)<=0) {
-                        res.add(s);
+                case "<=" -> {
+                    for (BoardGame s : list) {
+                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) <= 0) {
+                            res.add(s);
+                        }
                     }
                 }
-            }else if(operator.equals(">")){
-                for (BoardGame s : list) {
-                    if (s.getName().compareTo(value)>0) {
-                        res.add(s);
+                case ">" -> {
+                    for (BoardGame s : list) {
+                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) > 0) {
+                            res.add(s);
+                        }
                     }
                 }
-            }
-            else{
-                for (BoardGame s : list) {
-                    if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").contains(value.toLowerCase().replaceAll("\\s+", ""))) {
-                        res.add(s);
+                default -> {
+                    for (BoardGame s : list) {
+                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").contains(value.toLowerCase().replaceAll("\\s+", ""))) {
+                            res.add(s);
+                        }
                     }
                 }
             }
