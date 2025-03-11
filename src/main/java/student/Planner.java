@@ -21,6 +21,7 @@ public class Planner implements IPlanner {
     public Stream<BoardGame> filter(String filter) {
         // TODO Auto-generated method stu.b
         Filters filters = new Filters();
+        System.out.println(filter);
         curList = filters.controller(filter,curList);
         return curList.stream();
     }
