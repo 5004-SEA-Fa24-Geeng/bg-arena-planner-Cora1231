@@ -22,7 +22,7 @@ public class Planner implements IPlanner {
         // TODO Auto-generated method stu.b
         Filters filters = new Filters();
         System.out.println("this is filter "+filter);
-//        System.out.println("this is current list"+curList);
+        System.out.println("this is current list"+curList);
         curList = filters.controller(filter,curList);
         return curList.stream();
     }
