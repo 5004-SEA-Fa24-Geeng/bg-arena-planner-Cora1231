@@ -186,7 +186,7 @@ public class Filters {
     }
 
 
-    public List<BoardGame> filterByMinPlayer(String cmd, List<BoardGame> list) {
+    public List<BoardGame>  filterByMinPlayer(String cmd, List<BoardGame> list) {
         Pattern pattern = Pattern.compile("minplayers\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
@@ -219,7 +219,7 @@ public class Filters {
                 }
             }else if(operator.equals("!=")){
                 for (BoardGame s : list) {
-                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
+                    if (s.getMinPlayers() != Integer.parseInt(value)) {
                         res.add(s);
                     }
                 }
