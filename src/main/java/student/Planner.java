@@ -10,47 +10,47 @@ import java.util.stream.Stream;
 
 public class Planner implements IPlanner {
     Set<BoardGame> games;
-    Stream<BoardGame> curList;
+    List<BoardGame> curList;
     public Planner(Set<BoardGame> games) {
         // TODO Auto-generated method stub
         this.games = games;
-        curList = games.stream();
+        curList = new ArrayList<>(games);
     }
 
     @Override
     public Stream<BoardGame> filter(String filter) {
         // TODO Auto-generated method stu.b
         Filters filters = new Filters();
-        curList = filters.controller(filter,games.stream().toList()).stream();
-        return curList;
+        curList = filters.controller(filter,curList);
+        return curList.stream();
     }
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
         Filters filters = new Filters();
-        List<BoardGame> list = filters.controller(filter,games.stream().toList());
+        List<BoardGame> list = filters.controller(filter,curList);
         list.sort((a,b)->a.getYearPublished()== b.getYearPublished() ? a.getName().compareToIgnoreCase(b.getName()) : a.getYearPublished()-b.getYearPublished());
-        curList = list.stream();
+        curList = list;
         System.out.println(curList);
-        return curList;
+        return curList.stream();
     }
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
         Filters filters = new Filters();
-        List<BoardGame> list = filters.controller(filter,games.stream().toList());
+        List<BoardGame> list = filters.controller(filter,curList);
         list.sort((a,b)->a.getYearPublished()== b.getYearPublished() ? a.getName().compareToIgnoreCase(b.getName()) : a.getYearPublished()-b.getYearPublished());
-        curList = list.stream();
-        return curList;
+        curList = list;
+        return curList.stream();
     }
 
     @Override
     public void reset() {
-        curList = games.stream();
+        curList = new ArrayList<>(games);
     }
 
     public Stream<BoardGame> getCurList() {
-        return curList;
+        return curList.stream();
     }
 
 

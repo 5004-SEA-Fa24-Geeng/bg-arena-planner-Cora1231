@@ -23,6 +23,8 @@ public class Filters {
      */
     public List<BoardGame> controller(String commands, List<BoardGame> gameList) {
         String[] cmds = commands.split(",");
+        if(gameList.isEmpty())
+            return gameList;
         for (String cmd : cmds) {
             if (cmd.contains("name")) {
                 gameList = filterByName(cmd, gameList);
@@ -107,10 +109,7 @@ public class Filters {
             }
             else{
                 for (BoardGame s : list) {
-                    if(s.getName().equalsIgnoreCase("go fish")){
-                        System.out.println(name);
-                    }
-                    if (s.getName().trim().toLowerCase().contains(value.toLowerCase())) {
+                    if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").contains(value.toLowerCase())) {
                         res.add(s);
                     }
                 }
