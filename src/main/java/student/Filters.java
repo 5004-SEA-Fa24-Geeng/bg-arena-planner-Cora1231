@@ -108,7 +108,7 @@ public class Filters {
             else{
                 for (BoardGame s : list) {
                     if(s.getName().equalsIgnoreCase("go fish")){
-                        System.out.println(s.getName() + " is go fish");
+                        System.out.println(value);
                     }
                     if (s.getName().trim().toLowerCase().contains(value.toLowerCase())) {
                         res.add(s);
