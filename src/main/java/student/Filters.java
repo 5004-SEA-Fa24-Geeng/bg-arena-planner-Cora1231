@@ -62,7 +62,7 @@ public class Filters {
      * @return A list of board games matching the name filter.
      */
     public List<BoardGame> filterByName(String name, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("name(~=|==|!=)(\\S+)");
+        Pattern pattern = Pattern.compile("name(~=|==|!=|>=|<=|<|>)(\\S+)");
         Matcher matcher = pattern.matcher(name);
         List<BoardGame> res = new ArrayList<>();
         if (matcher.find()) {
@@ -80,10 +80,37 @@ public class Filters {
                         res.add(s);
                     }
                 }
+            }else if(operator.equals("<")){
+                for (BoardGame s : list) {
+                    if (s.getName().compareTo(value)<0) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals(">=")){
+                for (BoardGame s : list) {
+                    if (s.getName().compareTo(value)>=0) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals("<=")){
+                for (BoardGame s : list) {
+                    if (s.getName().compareTo(value)<=0) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals(">")){
+                for (BoardGame s : list) {
+                    if (s.getName().compareTo(value)>0) {
+                        res.add(s);
+                    }
+                }
             }
             else{
                 for (BoardGame s : list) {
-                    if (s.getName().toLowerCase().contains(value.toLowerCase())) {
+                    if(s.getName().equalsIgnoreCase("go fish")){
+                        System.out.println(s.getName() + " is go fish");
+                    }
+                    if (s.getName().trim().toLowerCase().contains(value.toLowerCase())) {
                         res.add(s);
                     }
                 }
