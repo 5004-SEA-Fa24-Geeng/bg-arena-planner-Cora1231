@@ -73,7 +73,7 @@ public class Filters {
             if (operator.equals("==")) {
                 for (BoardGame s : list) {
 
-                    if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(value.toLowerCase().trim())) {
+                    if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(value.toLowerCase().trim().replaceAll("\\s+", ""))) {
                         res.add(s);
                     }
                 }
