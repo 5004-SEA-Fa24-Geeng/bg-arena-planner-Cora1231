@@ -236,7 +236,7 @@ public class Filters {
 
 
     public List<BoardGame> filterByMinTime(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("mintime\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
+        Pattern pattern = Pattern.compile("minplaytime\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
         if (matcher.find()) {
