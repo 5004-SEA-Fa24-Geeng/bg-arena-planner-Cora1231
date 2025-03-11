@@ -23,6 +23,7 @@ public class Planner implements IPlanner {
         Filters filters = new Filters();
         System.out.println("this is filter "+filter);
         curList = filters.controller(filter,curList);
+        curList.sort(((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())));
         return curList.stream();
     }
 
