@@ -83,7 +83,7 @@ public class Filters {
                 }
                 case "!=" -> {
                     for (BoardGame s : list) {
-                        if (! s.getName().equals(value)) {
+                        if (! s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(anotherString)) {
                             res.add(s);
                         }
                     }
