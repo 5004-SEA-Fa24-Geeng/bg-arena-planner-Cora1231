@@ -130,7 +130,7 @@ public class Filters {
     }
 
     public List<BoardGame> filterByMaxPlayer(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("name\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
+        Pattern pattern = Pattern.compile("maxplayers\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
         if (matcher.find()) {
@@ -179,7 +179,7 @@ public class Filters {
 
 
     public List<BoardGame> filterByMinPlayer(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("name\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
+        Pattern pattern = Pattern.compile("minplayers\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
         if (matcher.find()) {
@@ -228,7 +228,7 @@ public class Filters {
 
 
     public List<BoardGame> filterByMinTime(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("name\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
+        Pattern pattern = Pattern.compile("mintime\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
         if (matcher.find()) {
