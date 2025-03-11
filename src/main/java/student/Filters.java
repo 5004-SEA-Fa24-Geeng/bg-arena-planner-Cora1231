@@ -71,9 +71,9 @@ public class Filters {
             String operator = matcher.group(1);  // Either ~= or ==
             String value = matcher.group(2);     // Extracted value
             if (operator.equals("==")) {
-                System.out.println("this is name "+name);
                 for (BoardGame s : list) {
-                    if (s.getName().equals(value)) {
+
+                    if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(value.toLowerCase().trim())) {
                         res.add(s);
                     }
                 }
