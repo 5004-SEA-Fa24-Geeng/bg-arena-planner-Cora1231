@@ -108,6 +108,7 @@ public class Filters {
                 }
             }
             else{
+                System.out.println(name);
                 for (BoardGame s : list) {
                     if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").contains(value.toLowerCase())) {
                         res.add(s);
