@@ -67,21 +67,42 @@ public class Filters {
                 cmd = cmd.replace(rank.name().toLowerCase(), "rank");
                 gameList = filterByRank(cmd, gameList);
             }
+
         }
 
-        // Sorting by rating if specified
-        if (commands.contains("sort:rating")) {
-            if (commands.contains("sort:rating desc")) {
-                gameList.sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
-            } else if (commands.contains("sort:rating asc")) {
-                gameList.sort((a, b) -> Double.compare(a.getRating(), b.getRating()));
-            }
-        }
 
         gameList = new ArrayList<>(new LinkedHashSet<>(gameList));
         return gameList;
     }
+    public static void sortGames(List<BoardGame> gameList, String column, boolean asc) {
+        Comparator<BoardGame> comparator = null;
 
+        switch (column) {
+            case "rating":
+                comparator = Comparator.comparingDouble(BoardGame::getRating);
+                break;
+            case "name":
+                comparator = Comparator.comparing(BoardGame::getName);
+                break;
+            case "yearpublished":
+                comparator = Comparator.comparingInt(BoardGame::getYearPublished);
+                break;
+            case "rank":
+                comparator = Comparator.comparingInt(BoardGame::getRank);
+                break;
+            case "difficulty":
+                comparator = Comparator.comparingDouble(BoardGame::getDifficulty);
+                break;
+            default:
+                System.out.println("Invalid column name: " + column);
+                return;
+        }
+
+        if (!asc) {
+            comparator = comparator.reversed();
+        }
+        gameList.sort(comparator);
+    }
     /**
      * Filters board games by rating.
      *

@@ -1,10 +1,7 @@
 package student;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -41,9 +38,39 @@ public class Planner implements IPlanner {
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
         Filters filters = new Filters();
         List<BoardGame> list = filters.controller(filter,curList);
-        list.sort((a,b)->a.getYearPublished()== b.getYearPublished() ? a.getName().compareToIgnoreCase(b.getName()) : a.getYearPublished()-b.getYearPublished());
+        sortGames(list,sortOn.getColumnName(),ascending);
         curList = list;
         return curList.stream();
+    }
+
+    public static void sortGames(List<BoardGame> gameList, String column, boolean asc) {
+        Comparator<BoardGame> comparator = null;
+
+        switch (column) {
+            case "rating":
+                comparator = Comparator.comparingDouble(BoardGame::getRating);
+                break;
+            case "name":
+                comparator = Comparator.comparing(BoardGame::getName);
+                break;
+            case "yearpublished":
+                comparator = Comparator.comparingInt(BoardGame::getYearPublished);
+                break;
+            case "rank":
+                comparator = Comparator.comparingInt(BoardGame::getRank);
+                break;
+            case "difficulty":
+                comparator = Comparator.comparingDouble(BoardGame::getDifficulty);
+                break;
+            default:
+                System.out.println("Invalid column name: " + column);
+                return;
+        }
+
+        if (!asc) {
+            comparator = comparator.reversed();
+        }
+        gameList.sort(comparator);
     }
 
     @Override
