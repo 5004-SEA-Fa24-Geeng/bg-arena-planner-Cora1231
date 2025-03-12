@@ -29,6 +29,7 @@ public class Filters {
         GameData minplayers = GameData.fromString("minplayers");
         GameData maxplayers = GameData.fromString("maxplayers");
         GameData mintime = GameData.fromString("minplaytime");
+        GameData maxtime = GameData.fromString("maxplaytime");
 
         for (String cmd : cmds) {
             cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
@@ -43,6 +44,9 @@ public class Filters {
 
             } else if (cmd.contains("minplaytime")||cmd.contains(mintime.name().toLowerCase())) {
                 cmd = cmd.replace(mintime.name().toLowerCase(),"minplaytime");
+                gameList = filterByMinTime(cmd, gameList);
+            }else if(cmd.contains("maxplayers")||cmd.contains(maxplayers.name().toLowerCase())) {
+                cmd = cmd.replace(maxtime.name().toLowerCase(),"maxplaytime");
                 gameList = filterByMinTime(cmd, gameList);
             }
         }
@@ -275,6 +279,54 @@ public class Filters {
             }else if(operator.equals("<=")){
                 for (BoardGame s : list) {
                     if (s.getMinPlayTime() <= Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    public List<BoardGame> filterByMaxTime(String cmd, List<BoardGame> list) {
+        Pattern pattern = Pattern.compile("maxplaytime\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
+        Matcher matcher = pattern.matcher(cmd);
+        List<BoardGame> res = new ArrayList<>();
+        if (matcher.find()) {
+            String operator = matcher.group(1);  // Either ~= or ==
+            String value = matcher.group(2);     // Extracted value
+            if (operator.equals("==")) {
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayTime()== Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals(">")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayTime() > Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            } else if(operator.equals("<")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayTime() < Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals("!=")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals(">=")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayTime() >= Integer.parseInt(value)) {
+                        res.add(s);
+                    }
+                }
+            }else if(operator.equals("<=")){
+                for (BoardGame s : list) {
+                    if (s.getMaxPlayTime() <= Integer.parseInt(value)) {
                         res.add(s);
                     }
                 }
