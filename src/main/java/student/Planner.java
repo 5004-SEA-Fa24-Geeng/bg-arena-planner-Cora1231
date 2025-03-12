@@ -69,7 +69,7 @@ public class Planner implements IPlanner {
                 comparator = Comparator.comparingInt(BoardGame::getMinPlayers);
                 break;
             case "maxplayers":
-                comparator = Comparator.comparingInt(BoardGame::getMaxPlayers);
+                comparator = (a, b) -> Integer.compare(a.getMinPlayers(), b.getMinPlayers());
                 break;
             case "maxplaytime":
                 comparator = Comparator.comparingInt(BoardGame::getMaxPlayTime);
