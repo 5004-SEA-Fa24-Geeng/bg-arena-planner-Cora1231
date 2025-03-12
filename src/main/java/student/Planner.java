@@ -39,9 +39,9 @@ public class Planner implements IPlanner {
         Filters filters = new Filters();
         List<BoardGame> list = filters.controller(filter,curList);
         System.out.println("this is filter "+filter);
-        System.out.println("this is GameData "+sortOn.getColumnName());
+        System.out.println("this is GameData "+sortOn.name());
 
-        sortGames(list,sortOn.name(),ascending);
+        sortGames(list,sortOn.name().toLowerCase(),ascending);
         curList = list;
         return curList.stream();
     }
