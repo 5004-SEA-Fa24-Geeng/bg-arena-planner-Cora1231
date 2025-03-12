@@ -145,7 +145,7 @@ public class Filters {
     }
 
     public List<BoardGame> filterByRank(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("yearpublished\\s*(~=|==|!=|>=|<=|<|>)\\s*(\\d+)");
+        Pattern pattern = Pattern.compile("rank\\s*(~=|==|!=|>=|<=|<|>)\\s*(\\d+)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
 
