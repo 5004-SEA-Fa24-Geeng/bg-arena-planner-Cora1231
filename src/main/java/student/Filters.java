@@ -45,7 +45,7 @@ public class Filters {
             } else if (cmd.contains("minplaytime")||cmd.contains(mintime.name().toLowerCase())) {
                 cmd = cmd.replace(mintime.name().toLowerCase(),"minplaytime");
                 gameList = filterByMinTime(cmd, gameList);
-            }else if(cmd.contains("maxplayers")||cmd.contains(maxplayers.name().toLowerCase())) {
+            }else if(cmd.contains("maxplaytime")||cmd.contains(maxplayers.name().toLowerCase())) {
                 cmd = cmd.replace(maxtime.name().toLowerCase(),"maxplaytime");
                 gameList = filterByMaxTime(cmd, gameList);
             }
