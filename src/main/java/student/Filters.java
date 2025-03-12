@@ -30,97 +30,37 @@ public class Filters {
             return gameList;
         }
 
-        // Keeping GameData variables for filtering
-        GameData minplayers = GameData.fromString("minplayers");
-        GameData maxplayers = GameData.fromString("maxplayers");
-        GameData mintime = GameData.fromString("minplaytime");
-        GameData maxtime = GameData.fromString("maxplaytime");
-        GameData difficulty = GameData.fromString("difficulty");
-        GameData yearpublished = GameData.fromString("yearpublished");
-        GameData rating = GameData.fromString("rating");
-        GameData rank = GameData.fromString("rank");
-
         for (String cmd : cmds) {
             cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
 
             if (cmd.contains("name")) {
                 gameList = filterByName(cmd, gameList);
-            } else if (cmd.contains("maxplayers") || cmd.contains(maxplayers.name().toLowerCase())) {
-                cmd = cmd.replace(maxplayers.name().toLowerCase(), "maxplayers");
+            } else if (cmd.contains("maxplayers")) {
                 gameList = filterByMaxPlayer(cmd, gameList);
-            } else if (cmd.contains("minplayers") || cmd.contains(minplayers.name().toLowerCase())) {
-                cmd = cmd.replace(minplayers.name().toLowerCase(), "minplayers");
+            } else if (cmd.contains("minplayers")) {
                 gameList = filterByMinPlayer(cmd, gameList);
-            } else if (cmd.contains("minplaytime") || cmd.contains(mintime.name().toLowerCase())) {
-                cmd = cmd.replace(mintime.name().toLowerCase(), "minplaytime");
+            } else if (cmd.contains("minplaytime")) {
                 gameList = filterByMinTime(cmd, gameList);
-            } else if (cmd.contains("maxplaytime") || cmd.contains(maxtime.name().toLowerCase())) {
-                cmd = cmd.replace(maxtime.name().toLowerCase(), "maxplaytime");
+            } else if (cmd.contains("maxplaytime")) {
                 gameList = filterByMaxTime(cmd, gameList);
-            } else if (cmd.contains("difficulty") || cmd.contains(difficulty.name().toLowerCase())) {
-                cmd = cmd.replace(difficulty.name().toLowerCase(), "difficulty");
+            } else if (cmd.contains("difficulty")) {
                 gameList = filterByDifficulty(cmd, gameList);
-            } else if (cmd.contains("rating") || cmd.contains(rating.name().toLowerCase())) {
-                cmd = cmd.replace(rating.name().toLowerCase(), "rating");
+            } else if (cmd.contains("rating")) {
                 gameList = filterByRating(cmd, gameList);
-            } else if (cmd.contains("yearpublished") || cmd.contains(yearpublished.name().toLowerCase())) {
-                cmd = cmd.replace(yearpublished.name().toLowerCase(), "yearpublished");
+            } else if (cmd.contains("yearpublished")) {
                 gameList = filterByYearPublished(cmd, gameList);
-            } else if (cmd.contains("rank") || cmd.contains(rank.name().toLowerCase())) {
-                cmd = cmd.replace(rank.name().toLowerCase(), "rank");
+            } else if (cmd.contains("rank")) {
                 gameList = filterByRank(cmd, gameList);
             }
         }
 
-        gameList = new ArrayList<>(new LinkedHashSet<>(gameList));
-        return gameList;
+        return new ArrayList<>(new LinkedHashSet<>(gameList));
     }
 
     /**
-     * Sorts the list of board games based on the specified column and order.
-     *
-     * @param gameList The list of board games to be sorted.
-     * @param column   The column to sort by (e.g., "rating", "name").
-     * @param asc      Whether to sort in ascending order.
+     * Filters board games by a given numerical property.
      */
-    public static void sortGames(List<BoardGame> gameList, String column, boolean asc) {
-        Comparator<BoardGame> comparator = null;
-
-        switch (column) {
-            case "rating":
-                comparator = Comparator.comparingDouble(BoardGame::getRating);
-                break;
-            case "name":
-                comparator = Comparator.comparing(BoardGame::getName);
-                break;
-            case "yearpublished":
-                comparator = Comparator.comparingInt(BoardGame::getYearPublished);
-                break;
-            case "rank":
-                comparator = Comparator.comparingInt(BoardGame::getRank);
-                break;
-            case "difficulty":
-                comparator = Comparator.comparingDouble(BoardGame::getDifficulty);
-                break;
-            default:
-                System.out.println("Invalid column name: " + column);
-                return;
-        }
-
-        if (!asc) {
-            comparator = comparator.reversed();
-        }
-        gameList.sort(comparator);
-    }
-
-    /**
-     * Filters board games by rating.
-     *
-     * @param cmd  The rating filtering command (e.g., "rating >= 4.5").
-     * @param list The list of board games.
-     * @return A list of board games that match the rating filter.
-     */
-    public List<BoardGame> filterByRating(String cmd, List<BoardGame> list) {
+    private List<BoardGame> filterByNumeric(String cmd, List<BoardGame> list, String field) {
         Pattern pattern = Pattern.compile("\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
@@ -130,413 +70,85 @@ public class Filters {
             double value = Double.parseDouble(matcher.group(2));
 
             for (BoardGame s : list) {
-                double rating = s.getRating();
+                double fieldValue = switch (field) {
+                    case "rating" -> s.getRating();
+                    case "difficulty" -> s.getDifficulty();
+                    case "yearpublished" -> s.getYearPublished();
+                    case "rank" -> s.getRank();
+                    case "maxplayers" -> s.getMaxPlayers();
+                    case "minplayers" -> s.getMinPlayers();
+                    case "minplaytime" -> s.getMinPlayTime();
+                    case "maxplaytime" -> s.getMaxPlayTime();
+                    default -> throw new IllegalArgumentException("Invalid field: " + field);
+                };
+
                 switch (operator) {
-                    case "==":
-                        if (rating == value) {
-                            res.add(s);
-                        }
-                        break;
-                    case "!=":
-                        if (rating != value) {
-                            res.add(s);
-                        }
-                        break;
-                    case ">":
-                        if (rating > value) {
-                            res.add(s);
-                        }
-                        break;
-                    case "<":
-                        if (rating < value) {
-                            res.add(s);
-                        }
-                        break;
-                    case ">=":
-                        if (rating >= value) {
-                            res.add(s);
-                        }
-                        break;
-                    case "<=":
-                        if (rating <= value) {
-                            res.add(s);
-                        }
-                        break;
-                    default:
-                        break;
+                    case "==" -> { if (fieldValue == value) res.add(s); }
+                    case "!=" -> { if (fieldValue != value) res.add(s); }
+                    case ">" -> { if (fieldValue > value) res.add(s); }
+                    case "<" -> { if (fieldValue < value) res.add(s); }
+                    case ">=" -> { if (fieldValue >= value) res.add(s); }
+                    case "<=" -> { if (fieldValue <= value) res.add(s); }
                 }
             }
         }
         return res;
     }
 
+    public List<BoardGame> filterByRating(String cmd, List<BoardGame> list) {
+        return filterByNumeric(cmd, list, "rating");
+    }
 
-    /**
-     * Filters board games by year published.
-     *
-     * @param cmd  The year filtering command (e.g., "yearPublished >= 2000").
-     * @param list The list of board games.
-     * @return A list of board games that match the year filter.
-     */
+    public List<BoardGame> filterByDifficulty(String cmd, List<BoardGame> list) {
+        return filterByNumeric(cmd, list, "difficulty");
+    }
+
     public List<BoardGame> filterByYearPublished(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
-        Matcher matcher = pattern.matcher(cmd);
-        List<BoardGame> res = new ArrayList<>();
-
-        if (matcher.find()) {
-            String operator = matcher.group(1);
-            int value = Integer.parseInt(matcher.group(2));
-
-            for (BoardGame s : list) {
-                int year = s.getYearPublished();
-                switch (operator) {
-                    case "==" -> { if (year == value) res.add(s); }
-                    case "!=" -> { if (year != value) res.add(s); }
-                    case ">"  -> { if (year > value) res.add(s); }
-                    case "<"  -> { if (year < value) res.add(s); }
-                    case ">=" -> { if (year >= value) res.add(s); }
-                    case "<=" -> { if (year <= value) res.add(s); }
-                }
-            }
-        }
-        return res;
+        return filterByNumeric(cmd, list, "yearpublished");
     }
 
     public List<BoardGame> filterByRank(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("rank\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
-        Matcher matcher = pattern.matcher(cmd);
-        List<BoardGame> res = new ArrayList<>();
+        return filterByNumeric(cmd, list, "rank");
+    }
 
-        if (matcher.find()) {
-            String operator = matcher.group(1);
-            int value = Integer.parseInt(matcher.group(2));
+    public List<BoardGame> filterByMaxPlayer(String cmd, List<BoardGame> list) {
+        return filterByNumeric(cmd, list, "maxplayers");
+    }
 
-            for (BoardGame s : list) {
-                int year = s.getRank();
-                switch (operator) {
-                    case "==" -> { if (year == value) res.add(s); }
-                    case "!=" -> { if (year != value) res.add(s); }
-                    case ">"  -> { if (year > value) res.add(s); }
-                    case "<"  -> { if (year < value) res.add(s); }
-                    case ">=" -> { if (year >= value) res.add(s); }
-                    case "<=" -> { if (year <= value) res.add(s); }
-                }
-            }
-        }
-        return res;
+    public List<BoardGame> filterByMinPlayer(String cmd, List<BoardGame> list) {
+        return filterByNumeric(cmd, list, "minplayers");
+    }
+
+    public List<BoardGame> filterByMinTime(String cmd, List<BoardGame> list) {
+        return filterByNumeric(cmd, list, "minplaytime");
+    }
+
+    public List<BoardGame> filterByMaxTime(String cmd, List<BoardGame> list) {
+        return filterByNumeric(cmd, list, "maxplaytime");
     }
 
     /**
      * Filters board games by name.
-     *
-     * @param name The name substring to filter by.
-     * @param list The list of board games.
-     * @return A list of board games matching the name filter.
      */
     public List<BoardGame> filterByName(String name, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("name\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
+        Pattern pattern = Pattern.compile("name\\s*(~=|==|!=)\\s*(.*)");
         Matcher matcher = pattern.matcher(name);
         List<BoardGame> res = new ArrayList<>();
-        if (matcher.find()) {
-            String operator = matcher.group(1);  // Either ~= or ==
-            String value = matcher.group(2);     // Extracted value
-            String anotherString = value.toLowerCase().trim().replaceAll("\\s+", "");
-            switch (operator) {
-                case "==" -> {
-                    for (BoardGame s : list) {
 
-                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(anotherString)) {
-                            res.add(s);
-                        }
-                    }
-                }
-                case "!=" -> {
-                    for (BoardGame s : list) {
-                        if (! s.getName().trim().toLowerCase().replaceAll("\\s+", "").equals(anotherString)) {
-                            res.add(s);
-                        }
-                    }
-                }
-                case "<" -> {
-                    for (BoardGame s : list) {
-                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) < 0) {
-                            res.add(s);
-                        }
-                    }
-                }
-                case ">=" -> {
-                    for (BoardGame s : list) {
-                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) >= 0) {
-                            res.add(s);
-                        }
-                    }
-                }
-                case "<=" -> {
-                    for (BoardGame s : list) {
-                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) <= 0) {
-                            res.add(s);
-                        }
-                    }
-                }
-                case ">" -> {
-                    for (BoardGame s : list) {
-                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").compareTo(anotherString) > 0) {
-                            res.add(s);
-                        }
-                    }
-                }
-                default -> {
-                    for (BoardGame s : list) {
-                        if (s.getName().trim().toLowerCase().replaceAll("\\s+", "").contains(value.toLowerCase().replaceAll("\\s+", ""))) {
-                            res.add(s);
-                        }
-                    }
+        if (matcher.find()) {
+            String operator = matcher.group(1);
+            String value = matcher.group(2).trim().toLowerCase().replaceAll("\\s+", "");
+
+            for (BoardGame s : list) {
+                String gameName = s.getName().trim().toLowerCase().replaceAll("\\s+", "");
+                switch (operator) {
+                    case "==" -> { if (gameName.equals(value)) res.add(s); }
+                    case "!=" -> { if (!gameName.equals(value)) res.add(s); }
+                    default -> { if (gameName.contains(value)) res.add(s); }
                 }
             }
         }
-        res.sort(((o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase())));
-        return res;
-    }
-
-    public List<BoardGame> filterByMaxPlayer(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("maxplayers\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
-        Matcher matcher = pattern.matcher(cmd);
-        List<BoardGame> res = new ArrayList<>();
-        if (matcher.find()) {
-            String operator = matcher.group(1);  // Either ~= or ==
-            String value = matcher.group(2);     // Extracted value
-            if (operator.equals("==")) {
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers()== Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers() > Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            } else if(operator.equals("!=")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("<")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers() < Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">=")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers() >= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("<=")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers() <= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }
-        }
-        return res;
-    }
-
-
-    public List<BoardGame>  filterByMinPlayer(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("minplayers\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
-        Matcher matcher = pattern.matcher(cmd);
-        List<BoardGame> res = new ArrayList<>();
-        if (matcher.find()) {
-            String operator = matcher.group(1);  // Either ~= or ==
-            String value = matcher.group(2);     // Extracted value
-            if (operator.equals("==")) {
-                for (BoardGame s : list) {
-                    if (s.getMinPlayers()== Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayers() > Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            } else if(operator.equals("<")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayers() < Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">=")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayers() >= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("!=")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayers() != Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("<=")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayers() <= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }
-        }
-        return res;
-    }
-
-
-    public List<BoardGame> filterByMinTime(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("minplaytime\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
-        Matcher matcher = pattern.matcher(cmd);
-        List<BoardGame> res = new ArrayList<>();
-        if (matcher.find()) {
-            String operator = matcher.group(1);  // Either ~= or ==
-            String value = matcher.group(2);     // Extracted value
-            if (operator.equals("==")) {
-                for (BoardGame s : list) {
-                    if (s.getMinPlayTime()== Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayTime() > Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            } else if(operator.equals("<")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayTime() < Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("!=")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">=")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayTime() >= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("<=")){
-                for (BoardGame s : list) {
-                    if (s.getMinPlayTime() <= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }
-        }
-        return res;
-    }
-
-    public List<BoardGame> filterByMaxTime(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("maxplaytime\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
-        Matcher matcher = pattern.matcher(cmd);
-        List<BoardGame> res = new ArrayList<>();
-        if (matcher.find()) {
-            String operator = matcher.group(1);  // Either ~= or ==
-            String value = matcher.group(2);     // Extracted value
-            if (operator.equals("==")) {
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayTime()== Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayTime() > Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            } else if(operator.equals("<")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayTime() < Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("!=")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayers() != Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">=")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayTime() >= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("<=")){
-                for (BoardGame s : list) {
-                    if (s.getMaxPlayTime() <= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }
-        }
-        return res;
-    }
-
-    public List<BoardGame> filterByDifficulty(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("difficulty\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
-        Matcher matcher = pattern.matcher(cmd);
-        List<BoardGame> res = new ArrayList<>();
-        if (matcher.find()) {
-            String operator = matcher.group(1);  // Either ~= or ==
-            String value = matcher.group(2);     // Extracted value
-            if (operator.equals("==")) {
-                for (BoardGame s : list) {
-                    if (s.getDifficulty()== Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">")){
-                for (BoardGame s : list) {
-                    if (s.getDifficulty() > Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            } else if(operator.equals("<")){
-                for (BoardGame s : list) {
-                    if (s.getDifficulty() < Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("!=")){
-                for (BoardGame s : list) {
-                    if (s.getDifficulty() != Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals(">=")){
-                for (BoardGame s : list) {
-                    if (s.getDifficulty() >= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }else if(operator.equals("<=")){
-                for (BoardGame s : list) {
-                    if (s.getDifficulty() <= Integer.parseInt(value)) {
-                        res.add(s);
-                    }
-                }
-            }
-        }
+        res.sort(Comparator.comparing(o -> o.getName().toLowerCase()));
         return res;
     }
 }
