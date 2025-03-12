@@ -12,20 +12,23 @@ public class Filters {
     /**
      * Default constructor.
      */
-    public Filters() {}
+    public Filters() {
+        // Default constructor
+    }
 
     /**
      * Applies multiple filtering and sorting commands to a list of board games.
      *
-     * @param commands  The filtering/sorting commands in string format.
-     * @param gameList  The list of board games to be filtered.
+     * @param commands The filtering/sorting commands in string format.
+     * @param gameList The list of board games to be filtered.
      * @return The filtered and sorted list of board games.
      */
     public List<BoardGame> controller(String commands, List<BoardGame> gameList) {
         String[] cmds = commands.split(",");
 
-        if (gameList.isEmpty())
+        if (gameList.isEmpty()) {
             return gameList;
+        }
 
         // Keeping GameData variables for filtering
         GameData minplayers = GameData.fromString("minplayers");
@@ -35,7 +38,7 @@ public class Filters {
         GameData difficulty = GameData.fromString("difficulty");
         GameData yearpublished = GameData.fromString("yearpublished");
         GameData rating = GameData.fromString("rating");
-        GameData rank  = GameData.fromString("rank");
+        GameData rank = GameData.fromString("rank");
 
         for (String cmd : cmds) {
             cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
@@ -63,17 +66,23 @@ public class Filters {
             } else if (cmd.contains("yearpublished") || cmd.contains(yearpublished.name().toLowerCase())) {
                 cmd = cmd.replace(yearpublished.name().toLowerCase(), "yearpublished");
                 gameList = filterByYearPublished(cmd, gameList);
-            }else if (cmd.contains("rank") || cmd.contains(rank.name().toLowerCase())) {
+            } else if (cmd.contains("rank") || cmd.contains(rank.name().toLowerCase())) {
                 cmd = cmd.replace(rank.name().toLowerCase(), "rank");
                 gameList = filterByRank(cmd, gameList);
             }
-
         }
-
 
         gameList = new ArrayList<>(new LinkedHashSet<>(gameList));
         return gameList;
     }
+
+    /**
+     * Sorts the list of board games based on the specified column and order.
+     *
+     * @param gameList The list of board games to be sorted.
+     * @param column   The column to sort by (e.g., "rating", "name").
+     * @param asc      Whether to sort in ascending order.
+     */
     public static void sortGames(List<BoardGame> gameList, String column, boolean asc) {
         Comparator<BoardGame> comparator = null;
 
@@ -103,6 +112,7 @@ public class Filters {
         }
         gameList.sort(comparator);
     }
+
     /**
      * Filters board games by rating.
      *
@@ -122,17 +132,44 @@ public class Filters {
             for (BoardGame s : list) {
                 double rating = s.getRating();
                 switch (operator) {
-                    case "==" -> { if (rating == value) res.add(s); }
-                    case "!=" -> { if (rating != value) res.add(s); }
-                    case ">"  -> { if (rating > value) res.add(s); }
-                    case "<"  -> { if (rating < value) res.add(s); }
-                    case ">=" -> { if (rating >= value) res.add(s); }
-                    case "<=" -> { if (rating <= value) res.add(s); }
+                    case "==":
+                        if (rating == value) {
+                            res.add(s);
+                        }
+                        break;
+                    case "!=":
+                        if (rating != value) {
+                            res.add(s);
+                        }
+                        break;
+                    case ">":
+                        if (rating > value) {
+                            res.add(s);
+                        }
+                        break;
+                    case "<":
+                        if (rating < value) {
+                            res.add(s);
+                        }
+                        break;
+                    case ">=":
+                        if (rating >= value) {
+                            res.add(s);
+                        }
+                        break;
+                    case "<=":
+                        if (rating <= value) {
+                            res.add(s);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }
         return res;
     }
+
 
     /**
      * Filters board games by year published.
