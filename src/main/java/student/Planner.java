@@ -38,6 +38,9 @@ public class Planner implements IPlanner {
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
         Filters filters = new Filters();
         List<BoardGame> list = filters.controller(filter,curList);
+        System.out.println("this is filter "+filter);
+        System.out.println("this is GameData "+sortOn.getColumnName());
+
         sortGames(list,sortOn.getColumnName(),ascending);
         curList = list;
         return curList.stream();
