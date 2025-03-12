@@ -4,6 +4,8 @@ package student;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static student.GameData.MIN_PLAYERS;
+
 
 public class Planner implements IPlanner {
     Set<BoardGame> games;
@@ -28,6 +30,9 @@ public class Planner implements IPlanner {
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
         Filters filters = new Filters();
         List<BoardGame> list = filters.controller(filter,curList);
+        System.out.println("this is sortOn "+sortOn.getColumnName());
+        System.out.println("this is sortOn "+sortOn.name());
+
         curList = sortGames(list,sortOn.name().toLowerCase(),true);
         return curList.stream();
     }
