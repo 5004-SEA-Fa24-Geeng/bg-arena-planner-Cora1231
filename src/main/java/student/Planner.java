@@ -28,9 +28,7 @@ public class Planner implements IPlanner {
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
         Filters filters = new Filters();
         List<BoardGame> list = filters.controller(filter,curList);
-        list.sort((a,b)->a.getYearPublished()== b.getYearPublished() ? a.getName().compareToIgnoreCase(b.getName()) : a.getYearPublished()-b.getYearPublished());
-        curList = list;
-        System.out.println(curList);
+        curList = sortGames(list,sortOn.name().toLowerCase(),true);
         return curList.stream();
     }
 
@@ -38,10 +36,11 @@ public class Planner implements IPlanner {
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
         Filters filters = new Filters();
         List<BoardGame> list = filters.controller(filter,curList);
-        System.out.println("this is filter "+filter);
-        System.out.println("this is GameData "+sortOn.name());
 
         curList = sortGames(list,sortOn.name().toLowerCase(),ascending);
+        if(curList.isEmpty()) {
+            return null;
+        }
         return curList.stream();
     }
 
@@ -78,7 +77,7 @@ public class Planner implements IPlanner {
                 break;
             default:
                 System.out.println("Invalid column name: " + column);
-                return null ;
+                return new ArrayList<>() ;
         }
 
         if (!asc) {
