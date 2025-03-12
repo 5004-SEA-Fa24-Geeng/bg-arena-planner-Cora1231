@@ -65,10 +65,28 @@ public class Planner implements IPlanner {
             case "difficulty":
                 comparator = Comparator.comparingDouble(BoardGame::getDifficulty);
                 break;
+            case "minplayers":
+                comparator = Comparator.comparingInt(BoardGame::getMinPlayers);
+                break;
+            case "maxplayers":
+                comparator = Comparator.comparingInt(BoardGame::getMaxPlayers);
+                break;
+            case "maxplaytime":
+                comparator = Comparator.comparingInt(BoardGame::getMaxPlayTime);
+                break;
+            case "minplaytime":
+                comparator = Comparator.comparingInt(BoardGame::getMinPlayTime);
+                break;
             default:
                 System.out.println("Invalid column name: " + column);
                 return;
         }
+
+        if (!asc) {
+            comparator = comparator.reversed();
+        }
+        gameList.sort(comparator);
+
 
         if (!asc) {
             comparator = comparator.reversed();
