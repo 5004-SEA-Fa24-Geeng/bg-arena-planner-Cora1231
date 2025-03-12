@@ -21,11 +21,19 @@ public class Filters {
      * @param gameList  The list of board games to be filtered.
      * @return The filtered and sorted list of board games.
      */
+    /**
+     * Applies multiple filtering and sorting commands to a list of board games.
+     *
+     * @param commands The filtering/sorting commands in string format.
+     * @param gameList The list of board games to be filtered.
+     * @return The filtered and sorted list of board games.
+     */
     public List<BoardGame> controller(String commands, List<BoardGame> gameList) {
         String[] cmds = commands.split(",");
 
-        if (gameList.isEmpty())
+        if (gameList.isEmpty()) {
             return gameList;
+        }
 
         // Keeping GameData variables for filtering
         GameData minplayers = GameData.fromString("minplayers");
@@ -35,7 +43,7 @@ public class Filters {
         GameData difficulty = GameData.fromString("difficulty");
         GameData yearpublished = GameData.fromString("yearpublished");
         GameData rating = GameData.fromString("rating");
-        GameData rank  = GameData.fromString("rank");
+        GameData rank = GameData.fromString("rank");
 
         for (String cmd : cmds) {
             cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
@@ -43,33 +51,23 @@ public class Filters {
             if (cmd.contains("name")) {
                 gameList = filterByName(cmd, gameList);
             } else if (cmd.contains("maxplayers") || cmd.contains(maxplayers.name().toLowerCase())) {
-                cmd = cmd.replace(maxplayers.name().toLowerCase(), "maxplayers");
                 gameList = filterByMaxPlayer(cmd, gameList);
             } else if (cmd.contains("minplayers") || cmd.contains(minplayers.name().toLowerCase())) {
-                cmd = cmd.replace(minplayers.name().toLowerCase(), "minplayers");
                 gameList = filterByMinPlayer(cmd, gameList);
             } else if (cmd.contains("minplaytime") || cmd.contains(mintime.name().toLowerCase())) {
-                cmd = cmd.replace(mintime.name().toLowerCase(), "minplaytime");
                 gameList = filterByMinTime(cmd, gameList);
             } else if (cmd.contains("maxplaytime") || cmd.contains(maxtime.name().toLowerCase())) {
-                cmd = cmd.replace(maxtime.name().toLowerCase(), "maxplaytime");
                 gameList = filterByMaxTime(cmd, gameList);
             } else if (cmd.contains("difficulty") || cmd.contains(difficulty.name().toLowerCase())) {
-                cmd = cmd.replace(difficulty.name().toLowerCase(), "difficulty");
                 gameList = filterByDifficulty(cmd, gameList);
             } else if (cmd.contains("rating") || cmd.contains(rating.name().toLowerCase())) {
-                cmd = cmd.replace(rating.name().toLowerCase(), "rating");
                 gameList = filterByRating(cmd, gameList);
             } else if (cmd.contains("yearpublished") || cmd.contains(yearpublished.name().toLowerCase())) {
-                cmd = cmd.replace(yearpublished.name().toLowerCase(), "yearpublished");
                 gameList = filterByYearPublished(cmd, gameList);
-            }else if (cmd.contains("rank") || cmd.contains(rank.name().toLowerCase())) {
-                cmd = cmd.replace(rank.name().toLowerCase(), "rank");
+            } else if (cmd.contains("rank") || cmd.contains(rank.name().toLowerCase())) {
                 gameList = filterByRank(cmd, gameList);
             }
-
         }
-
 
         gameList = new ArrayList<>(new LinkedHashSet<>(gameList));
         return gameList;
