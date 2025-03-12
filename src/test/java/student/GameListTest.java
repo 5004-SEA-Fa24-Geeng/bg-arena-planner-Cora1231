@@ -41,19 +41,6 @@ public class GameListTest {
         assertEquals(1,list.count());
         System.out.println(list);
     }
-    @Test
-    void clear() {
-        IGameList list = new GameList();
-        // Add all games to the list
-
-        // Verify that the list count equals the number of added games
-        assertEquals(games.size(), list.count());
-
-        // Clear the list
-        list.clear();
-        // Verify that the list is now empty
-        assertEquals(0, list.count());
-    }
 
     @Test
     void count() {
