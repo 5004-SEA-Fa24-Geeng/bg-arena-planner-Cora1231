@@ -41,7 +41,7 @@ public class Planner implements IPlanner {
         System.out.println("this is filter "+filter);
         System.out.println("this is GameData "+sortOn.getColumnName());
 
-        sortGames(list,sortOn.getColumnName(),ascending);
+        sortGames(list,sortOn.name(),ascending);
         curList = list;
         return curList.stream();
     }
