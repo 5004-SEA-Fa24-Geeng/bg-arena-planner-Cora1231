@@ -85,12 +85,7 @@ public class Planner implements IPlanner {
         if (!asc) {
             comparator = comparator.reversed();
         }
-        gameList.sort(comparator);
 
-
-        if (!asc) {
-            comparator = comparator.reversed();
-        }
         gameList.sort(comparator);
     }
 
