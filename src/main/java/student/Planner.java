@@ -59,7 +59,7 @@ public class Planner implements IPlanner {
             case "name":
                 comparator = Comparator.comparing(game -> game.getName().replaceAll("\\s+", "").toLowerCase());
                 break;
-            case "yearpublished":
+            case "yearpublished", "year_published":
                 comparator = Comparator.comparingInt(BoardGame::getYearPublished);
                 break;
             case "rank":
@@ -68,16 +68,16 @@ public class Planner implements IPlanner {
             case "difficulty":
                 comparator = Comparator.comparingDouble(BoardGame::getDifficulty);
                 break;
-            case "minplayers":
+            case "minplayers", "min_players":
                 comparator = Comparator.comparingInt(BoardGame::getMinPlayers);
                 break;
-            case "maxplayers":
+            case "maxplayers" , "max_players":
                 comparator = (a, b) -> Integer.compare(a.getMinPlayers(), b.getMinPlayers());
                 break;
-            case "maxplaytime":
+            case "maxplaytime", "max_playtime":
                 comparator = Comparator.comparingInt(BoardGame::getMaxPlayTime);
                 break;
-            case "minplaytime":
+            case "minplaytime", "min_playtime":
                 comparator = Comparator.comparingInt(BoardGame::getMinPlayTime);
                 break;
             default:
