@@ -152,17 +152,21 @@ public class Filters {
 
             for (BoardGame s : list) {
                 int year = s.getYearPublished();
-                switch (operator) {
-                    case "==" -> { if (year == value) res.add(s); }
-                    case "!=" -> { if (year != value) res.add(s); }
-                    case ">"  -> { if (year > value) res.add(s); }
-                    case "<"  -> { if (year < value) res.add(s); }
-                    case ">=" -> { if (year >= value) res.add(s); }
-                    case "<=" -> { if (year <= value) res.add(s); }
-                }
+                checkCmd(res, operator, value, s, year);
             }
         }
         return res;
+    }
+
+    private void checkCmd(List<BoardGame> res, String operator, int value, BoardGame s, int year) {
+        switch (operator) {
+            case "==" -> { if (year == value) res.add(s); }
+            case "!=" -> { if (year != value) res.add(s); }
+            case ">"  -> { if (year > value) res.add(s); }
+            case "<"  -> { if (year < value) res.add(s); }
+            case ">=" -> { if (year >= value) res.add(s); }
+            case "<=" -> { if (year <= value) res.add(s); }
+        }
     }
 
     public List<BoardGame> filterByRank(String cmd, List<BoardGame> list) {
@@ -176,14 +180,7 @@ public class Filters {
 
             for (BoardGame s : list) {
                 int year = s.getRank();
-                switch (operator) {
-                    case "==" -> { if (year == value) res.add(s); }
-                    case "!=" -> { if (year != value) res.add(s); }
-                    case ">"  -> { if (year > value) res.add(s); }
-                    case "<"  -> { if (year < value) res.add(s); }
-                    case ">=" -> { if (year >= value) res.add(s); }
-                    case "<=" -> { if (year <= value) res.add(s); }
-                }
+                checkCmd(res, operator, value, s, year);
             }
         }
         return res;
