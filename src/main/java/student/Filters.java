@@ -90,7 +90,7 @@ public class Filters {
      * @return A list of board games that match the rating filter.
      */
     public List<BoardGame> filterByRating(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("rating\\s*(~=|==|!=|>=|<=|<|>)\\s*(\\d+(\\.\\d+)?)");
+        Pattern pattern = Pattern.compile("\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
 
@@ -121,7 +121,7 @@ public class Filters {
      * @return A list of board games that match the year filter.
      */
     public List<BoardGame> filterByYearPublished(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("yearpublished\\s*(~=|==|!=|>=|<=|<|>)\\s*(\\d+)");
+        Pattern pattern = Pattern.compile("\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
 
@@ -145,7 +145,7 @@ public class Filters {
     }
 
     public List<BoardGame> filterByRank(String cmd, List<BoardGame> list) {
-        Pattern pattern = Pattern.compile("rank\\s*(~=|==|!=|>=|<=|<|>)\\s*(\\d+)");
+        Pattern pattern = Pattern.compile("rank\\s*(~=|==|!=|>=|<=|<|>)\\s*(.*)");
         Matcher matcher = pattern.matcher(cmd);
         List<BoardGame> res = new ArrayList<>();
 
