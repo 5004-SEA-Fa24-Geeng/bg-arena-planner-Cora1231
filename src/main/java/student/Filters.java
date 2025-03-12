@@ -35,6 +35,7 @@ public class Filters {
         GameData difficulty = GameData.fromString("difficulty");
         GameData yearpublished = GameData.fromString("yearpublished");
         GameData rating = GameData.fromString("rating");
+        GameData rank  = GameData.fromString("rank");
 
         for (String cmd : cmds) {
             cmd = cmd.trim().toLowerCase().replaceAll("\\s+", "");
@@ -62,6 +63,9 @@ public class Filters {
             } else if (cmd.contains("yearpublished") || cmd.contains(yearpublished.name().toLowerCase())) {
                 cmd = cmd.replace(yearpublished.name().toLowerCase(), "yearpublished");
                 gameList = filterByYearPublished(cmd, gameList);
+            }else if (cmd.contains("rank") || cmd.contains(rank.name().toLowerCase())) {
+                cmd = cmd.replace(rank.name().toLowerCase(), "rank");
+                gameList = filterByRank(cmd, gameList);
             }
         }
 
@@ -127,6 +131,30 @@ public class Filters {
 
             for (BoardGame s : list) {
                 int year = s.getYearPublished();
+                switch (operator) {
+                    case "==" -> { if (year == value) res.add(s); }
+                    case "!=" -> { if (year != value) res.add(s); }
+                    case ">"  -> { if (year > value) res.add(s); }
+                    case "<"  -> { if (year < value) res.add(s); }
+                    case ">=" -> { if (year >= value) res.add(s); }
+                    case "<=" -> { if (year <= value) res.add(s); }
+                }
+            }
+        }
+        return res;
+    }
+
+    public List<BoardGame> filterByRank(String cmd, List<BoardGame> list) {
+        Pattern pattern = Pattern.compile("yearpublished\\s*(~=|==|!=|>=|<=|<|>)\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(cmd);
+        List<BoardGame> res = new ArrayList<>();
+
+        if (matcher.find()) {
+            String operator = matcher.group(1);
+            int value = Integer.parseInt(matcher.group(2));
+
+            for (BoardGame s : list) {
+                int year = s.getRank();
                 switch (operator) {
                     case "==" -> { if (year == value) res.add(s); }
                     case "!=" -> { if (year != value) res.add(s); }
