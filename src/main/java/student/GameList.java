@@ -4,12 +4,16 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class for managing a list of board games.
+ */
 public class GameList implements IGameList {
+    /** Default filename used when saving game lists. */
     private static final String DEFAULT_FILENAME = "games_list.txt";
 
+    /** Set containing all board games. */
     private Set<BoardGame> games;
 
     /**
@@ -19,21 +23,39 @@ public class GameList implements IGameList {
         games = new HashSet<>();
     }
 
+    /**
+     * Retrieves the names of all board games in the list.
+     *
+     * @return A list of board game names.
+     */
     @Override
     public List<String> getGameNames() {
         return games.stream().map(BoardGame::getName).toList();
     }
 
+    /**
+     * Clears the list of board games.
+     */
     @Override
     public void clear() {
         games.clear();
     }
 
+    /**
+     * Returns the number of board games in the list.
+     *
+     * @return The count of board games.
+     */
     @Override
     public int count() {
         return games.size();
     }
 
+    /**
+     * Saves the current list of board games to a file.
+     *
+     * @param filename The name of the file to save to.
+     */
     @Override
     public void saveGame(String filename) {
         if (filename == null || filename.trim().isEmpty()) {
@@ -51,6 +73,13 @@ public class GameList implements IGameList {
         }
     }
 
+    /**
+     * Adds board games from a filtered stream based on input criteria.
+     *
+     * @param str      The input string specifying which games to add.
+     * @param filtered The stream of board games to filter from.
+     * @throws IllegalArgumentException if an invalid format is provided.
+     */
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
         if (str == null || str.isEmpty() || filtered == null) {
@@ -61,7 +90,8 @@ public class GameList implements IGameList {
         if (filteredList.isEmpty()) {
             return; // No games to add
         }
-        if (str.equals("all")) {
+
+        if ("all".equals(str)) {
             games.addAll(filteredList);
         }
 
@@ -99,6 +129,12 @@ public class GameList implements IGameList {
         }
     }
 
+    /**
+     * Removes board games from the list based on input criteria.
+     *
+     * @param str The input string specifying which games to remove.
+     * @throws IllegalArgumentException if an invalid format is provided.
+     */
     @Override
     public void removeFromList(String str) throws IllegalArgumentException {
         if (str == null || str.isEmpty()) {
@@ -106,10 +142,12 @@ public class GameList implements IGameList {
         }
 
         List<BoardGame> list = new ArrayList<>(games);
-        if (str.contains("all")) {
-            games = new HashSet<>();;
+
+        if ("all".equals(str)) {
+            games.clear();
             return;
         }
+
         // Handle range format (e.g., "1-3")
         if (str.contains("-")) {
             String[] arr = str.split("-");
