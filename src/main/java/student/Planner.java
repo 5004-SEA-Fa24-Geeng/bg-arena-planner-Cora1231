@@ -54,7 +54,7 @@ public class Planner implements IPlanner {
                 comparator = Comparator.comparingDouble(BoardGame::getRating);
                 break;
             case "name":
-                comparator = Comparator.comparing(BoardGame::getName);
+                comparator = Comparator.comparing(game -> game.getName().replaceAll("\\s+", "").toLowerCase());
                 break;
             case "yearpublished":
                 comparator = Comparator.comparingInt(BoardGame::getYearPublished);
