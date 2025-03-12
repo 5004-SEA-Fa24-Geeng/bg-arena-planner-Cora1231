@@ -41,12 +41,11 @@ public class Planner implements IPlanner {
         System.out.println("this is filter "+filter);
         System.out.println("this is GameData "+sortOn.name());
 
-        sortGames(list,sortOn.name().toLowerCase(),ascending);
-        curList = list;
+        curList = sortGames(list,sortOn.name().toLowerCase(),ascending);
         return curList.stream();
     }
 
-    public static void sortGames(List<BoardGame> gameList, String column, boolean asc) {
+    public static List<BoardGame> sortGames(List<BoardGame> gameList, String column, boolean asc) {
         Comparator<BoardGame> comparator = null;
 
         switch (column) {
@@ -79,7 +78,7 @@ public class Planner implements IPlanner {
                 break;
             default:
                 System.out.println("Invalid column name: " + column);
-                return;
+                return null ;
         }
 
         if (!asc) {
@@ -87,6 +86,7 @@ public class Planner implements IPlanner {
         }
 
         gameList.sort(comparator);
+        return gameList;
     }
 
     @Override
