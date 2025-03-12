@@ -47,7 +47,7 @@ public class Filters {
                 gameList = filterByMinTime(cmd, gameList);
             }else if(cmd.contains("maxplayers")||cmd.contains(maxplayers.name().toLowerCase())) {
                 cmd = cmd.replace(maxtime.name().toLowerCase(),"maxplaytime");
-                gameList = filterByMinTime(cmd, gameList);
+                gameList = filterByMaxTime(cmd, gameList);
             }
         }
 
