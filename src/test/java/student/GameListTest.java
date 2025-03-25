@@ -1,16 +1,17 @@
 package student;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import student.BoardGame;
-import student.GameList;
-import student.IGameList;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameListTest {
 
@@ -30,37 +31,101 @@ public class GameListTest {
     }
 
     @Test
-    void getGameNames() {
-        BoardGame test = new BoardGame("Tucano", 5, 10, 20, 60, 90, 6.0, 500, 8.0, 2004);
-        assertEquals("Tucano", test.getName());
-    }
-    @Test
-    void getAddSingleGameByIndex() {
+    void testGetGameNames() {
         GameList list = new GameList();
-        list.addToList("1",games.stream());
-        assertEquals(1,list.count());
-        System.out.println(list);
+        list.addToList("all", games.stream());
+        List<String> names = list.getGameNames();
+        assertEquals(8, names.size());
+        assertTrue(names.contains("Go"));
+        assertTrue(names.contains("Tucano"));
     }
 
     @Test
-    void count() {
-        // test code here
+    void testAddSingleGameByIndex() {
+        GameList list = new GameList();
+        list.addToList("3", games.stream());
+        assertEquals(1, list.count());
     }
 
     @Test
-    void saveGame() {
-        // test code here
+    void testAddSingleGameByName() {
+        GameList list = new GameList();
+        list.addToList("Go Fish", games.stream());
+        assertEquals(1, list.count());
+        assertTrue(list.getGameNames().contains("Go Fish"));
     }
 
     @Test
-    void testAddSingleGameToListByIndex() {
-        // example usage
-        IGameList list1 = new GameList();
-        // test code here
+    void testAddGameByRange() {
+        GameList list = new GameList();
+        list.addToList("2-4", games.stream());
+        assertEquals(3, list.count());
     }
 
     @Test
-    void removeFromList() {
-        // test code here
+    void testAddAllGames() {
+        GameList list = new GameList();
+        list.addToList("all", games.stream());
+        assertEquals(8, list.count());
+    }
+
+    @Test
+    void testRemoveByName() {
+        GameList list = new GameList();
+        list.addToList("all", games.stream());
+        list.removeFromList("GoRami");
+        assertEquals(7, list.count());
+        assertFalse(list.getGameNames().contains("GoRami"));
+    }
+
+    @Test
+    void testRemoveByIndex() {
+        GameList list = new GameList();
+        list.addToList("all", games.stream());
+        list.removeFromList("2");
+        assertEquals(7, list.count());
+    }
+
+    @Test
+    void testRemoveByRange() {
+        GameList list = new GameList();
+        list.addToList("all", games.stream());
+        list.removeFromList("1-3");
+        assertEquals(5, list.count());
+    }
+
+    @Test
+    void testRemoveAll() {
+        GameList list = new GameList();
+        list.addToList("all", games.stream());
+        list.removeFromList("all");
+        assertEquals(0, list.count());
+    }
+
+    @Test
+    void testCountAndClear() {
+        GameList list = new GameList();
+        list.addToList("all", games.stream());
+        assertEquals(8, list.count());
+        list.clear();
+        assertEquals(0, list.count());
+    }
+
+    @Test
+    void testSaveGameToFile() throws Exception {
+        GameList list = new GameList();
+        list.addToList("all", games.stream());
+
+        String tempFile = "test_games_list.txt";
+        list.saveGame(tempFile);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(tempFile))) {
+            List<String> lines = reader.lines().toList();
+            assertEquals(8, lines.size());
+            assertTrue(lines.contains("Go Fish"));
+            assertTrue(lines.contains("Monopoly"));
+        }
+
+        Files.deleteIfExists(Path.of(tempFile));
     }
 }
