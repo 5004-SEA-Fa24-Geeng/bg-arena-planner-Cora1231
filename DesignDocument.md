@@ -209,20 +209,6 @@ classDiagram
     Planner --> BoardGame : filters
 ```
 
-```mermaid
-classDiagram
-    class Player {
-      - id: int
-      - name: String
-      - email: String
-      + Player(id: int, name: String, email: String)
-      + getId(): int
-      + getName(): String
-      + getEmail(): String
-      + setEmail(email: String): void
-      + toString(): String
-    }
-```
 
 ## (INITIAL DESIGN): Tests to Write - Brainstorm
 
@@ -253,7 +239,63 @@ For the final design, you just need to do a single diagram that includes both th
 > [!WARNING]
 > If you resubmit your assignment for manual grading, this is a section that often needs updating. You should double check with every resubmit to make sure it is up to date.
 
+```mermaid
+classDiagram
+    %% Interfaces
+    class IPlanner {
+        <<interface>>
+    }
 
+    class IGameList {
+        <<interface>>
+    }
+
+    %% Core Classes
+    class Planner {
+        +filter()
+        +reset()
+    }
+
+    class Filters {
+        +controller()
+    }
+
+    class GameList {
+        +addToList()
+        +removeFromList()
+        +getGameNames()
+    }
+
+    class BoardGame {
+        +getName()
+    }
+
+    class GameData {
+        <<enum>>
+    }
+
+    class ConsoleApp {
+        +start()
+    }
+
+    class BGArenaPlanner {
+        +main()
+    }
+
+    %% Relationships
+    IPlanner <|.. Planner
+    IGameList <|.. GameList
+    Planner --> Filters
+    Planner --> BoardGame
+    Filters --> BoardGame
+    GameList --> BoardGame
+    ConsoleApp --> Planner
+    ConsoleApp --> IGameList
+    BGArenaPlanner --> ConsoleApp
+    Planner --> GameData
+    Filters --> GameData
+    ConsoleApp --> BoardGame
+```
 
 
 
@@ -263,3 +305,6 @@ For the final design, you just need to do a single diagram that includes both th
 > The value of reflective writing has been highly researched and documented within computer science, from learning to information to showing higher salaries in the workplace. For this next part, we encourage you to take time, and truly focus on your retrospective.
 
 Take time to reflect on how your design has changed. Write in *prose* (i.e. do not bullet point your answers - it matters in how our brain processes the information). Make sure to include what were some major changes, and why you made them. What did you learn from this process? What would you do differently next time? What was the most challenging part of this process? For most students, it will be a paragraph or two. 
+* As I implemented the system, however, I quickly realized that filtering logic was more complex than I had anticipated. For example, initially, I thought a single filtering method would be enough, but eventually, I had to introduce a dedicated Filters class with individual methods for each attribute (like filterByRating, filterByMinPlayers, etc.). This helped modularize the filtering system and made it much easier to debug and extend. The Planner class also needed to maintain state (the current filtered list), which wasn’t something I had fully considered in my first design, where everything felt more functional and stateless. This change made the progressive filtering behavior possible — a key feature of the system. Another significant change was the addition of enums like Operations and enhancements to GameData, which proved incredibly helpful for parsing and interpreting user filter commands. I didn’t initially plan for Operations, but as I dealt with various operators and comparisons, centralizing them became necessary to reduce redundancy and confusion in the code.
+
+* What I learned from this process is that the first design is rarely final — it’s a compass, not a map. Real-world implementation often reveals nuances that a static diagram can’t capture. For example, handling progressive filtering, edge cases in command parsing, and the challenge of keeping code both testable and readable required me to revise both structure and assumptions.
