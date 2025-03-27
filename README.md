@@ -3,9 +3,11 @@ Name: Qianfu Peng
 
 Github Account name:Cora1231
 
-Link to Assignment on Github: (copy and paste the link to your assignment repo here)
+Link to Assignment on Github: https://github.com/5004-SEA-Fa24-Geeng/bg-arena-planner-Cora1231.git
 
 How many hours did it take you to complete this assignment (estimate)?
+
+20 h
 
 Did you collaborate with any other students/TAs/Professors? If so, tell us who and in what
 capacity.
